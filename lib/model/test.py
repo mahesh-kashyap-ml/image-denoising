@@ -1916,7 +1916,7 @@ def test_net(sess, net, imdb, weights_filename, noise, max_per_image=100, thresh
     #print(feat11_)
     #with tf.device("/gpu:1"):
     #    graph = tf.get_default_graph()
-    if i == 0:
+    """if i == 0:
         output0 = graph.get_tensor_by_name('resnet_v1_101_1/block1/unit_1/bottleneck_v1/conv3/Conv2D:0')
         feat0 = sess.run(output0, feed_dict=feed_dict)
         feat00 = feat0.view().reshape(feat0.shape[0], -1)
@@ -1950,7 +1950,7 @@ def test_net(sess, net, imdb, weights_filename, noise, max_per_image=100, thresh
         #print("output shape of tensor feat0: ", feat0.shape )
         #print("output shape of tensor feat00: ", feat00.shape )
 
-        """#for res50
+        #for res50
         output0 = graph.get_tensor_by_name('resnet_v1_50_1/block1/unit_1/bottleneck_v1/conv3/Conv2D:0')
         feat0 = sess.run(output0, feed_dict=feed_dict)
         feat00 = feat0.view().reshape(feat0.shape[0], -1)
@@ -2019,7 +2019,7 @@ def test_net(sess, net, imdb, weights_filename, noise, max_per_image=100, thresh
         #feat100 = feat10.view().reshape(feat10.shape[0], -1)
         #output11 = graph.get_tensor_by_name('resnet_v1_101_4/block4/unit_3/bottleneck_v1/conv3/Conv2D:0')
         #feat11_ = sess.run(output11, feed_dict=feed_dict)
-        #feat111 = feat11_.view().reshape(feat11_.shape[0], -1)"""
+        #feat111 = feat11_.view().reshape(feat11_.shape[0], -1)
     else:
         output0 = graph.get_tensor_by_name('resnet_v1_101_1/block1/unit_1/bottleneck_v1/conv3/Conv2D:0')
         feat0 = sess.run(output0, feed_dict=feed_dict)
@@ -2057,7 +2057,7 @@ def test_net(sess, net, imdb, weights_filename, noise, max_per_image=100, thresh
         #print("output shape of tensor out 1: ", output1.shape)
         #print("output shape of tensor out 8:", output8.shape )
 
-        """#for res50
+        #for res50
         output0 = graph.get_tensor_by_name('resnet_v1_50_1/block1/unit_1/bottleneck_v1/conv3/Conv2D:0')
         feat0 = sess.run(output0, feed_dict=feed_dict)
         output1 = graph.get_tensor_by_name('resnet_v1_50_1/block1/unit_3/bottleneck_v1/conv3/Conv2D:0')
@@ -2106,7 +2106,7 @@ def test_net(sess, net, imdb, weights_filename, noise, max_per_image=100, thresh
         #output9 = graph.get_tensor_by_name('resnet_v1_101_3/rpn_conv/3x3/Conv2D:0')
         #feat9 = sess.run(output9, feed_dict=feed_dict)
         #feat99 = tf.concat([feat99, feat9.view().reshape(feat9.shape[0], -1)],0)
-        #feat99 = np.concatenate([feat99, feat9.view().reshape(feat9.shape[0], -1)],0)"""
+        #feat99 = np.concatenate([feat99, feat9.view().reshape(feat9.shape[0], -1)],0)
         with tf.device("/cpu:0"):
             feat00 = np.concatenate([feat00, feat0.view().reshape(feat0.shape[0], -1)],0)
             feat11 = np.concatenate([feat11, feat1.view().reshape(feat1.shape[0], -1)],0)
@@ -2117,19 +2117,8 @@ def test_net(sess, net, imdb, weights_filename, noise, max_per_image=100, thresh
             feat66 = np.concatenate([feat66, feat6.view().reshape(feat6.shape[0], -1)],0)
             feat77 = np.concatenate([feat77, feat7.view().reshape(feat7.shape[0], -1)],0)
             feat88 = np.concatenate([feat88, feat8.view().reshape(feat8.shape[0], -1)],0)
-            #feat99 = np.concatenate([feat99, feat9.view().reshape(feat9.shape[0], -1)],0)
+            #feat99 = np.concatenate([feat99, feat9.view().reshape(feat9.shape[0], -1)],0)"""
 
-        #output10 = graph.get_tensor_by_name('resnet_v1_101_4/block4/unit_1/bottleneck_v1/conv3/Conv2D:0')
-        #feat10 = sess.run(output10, feed_dict=feed_dict)
-        #feat100 = np.concatenate([feat100, feat10.view().reshape(feat10.shape[0], -1)],0)
-        #output11 = graph.get_tensor_by_name('resnet_v1_101_4/block4/unit_3/bottleneck_v1/conv3/Conv2D:0')
-        #feat11_ = sess.run(output11, feed_dict=feed_dict)
-        #feat111 = np.concatenate([feat111, feat11_.view().reshape(feat11_.shape[0], -1)],0)
-
-        #print("output shape of tensor after concat layer 0: ", feat00.shape)
-        #print("output shape of tensor layer 8:", feat88.shape )
-        #print("out00: ", feat00)
-        ID = {"feat00": feat00}
         """ID = {
                   "feat00": feat00,
                   "feat11": feat11,
@@ -2213,7 +2202,7 @@ def test_net(sess, net, imdb, weights_filename, noise, max_per_image=100, thresh
         dets = dets[keep, :]
         vis_detections(im, cls, dets, noise, thresh=CONF_THRESH)"""
   #with tf.device("/gpu:0"):
-  ID_all = []
+  """ID_all = []
   count = 1
   for key, value in sorted(ID.iteritems()):
       #print(key, value)
@@ -2226,7 +2215,7 @@ def test_net(sess, net, imdb, weights_filename, noise, max_per_image=100, thresh
   print("Final result: {}".format(ID_all[:,0]))
   #ID_final = ID_all[:,0]
   #wandb.log({"ID": ID_final})
-  print("Done.")
+  print("Done.")"""
 
 
   det_file = os.path.join(output_dir, 'detections.pkl')
