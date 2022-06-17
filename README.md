@@ -1,16 +1,22 @@
-# tf-faster-rcnn is deprecated:
-For a good and more up-to-date implementation for faster/mask RCNN with multi-gpu support, please see the example in TensorPack [here](https://github.com/tensorpack/tensorpack/tree/master/examples/FasterRCNN).
-
-# tf-faster-rcnn
+# Image denoising for Object detection with Faster R-CNN:
+The objective of this project is to,
+  - Implement Object detection with Faster R-CNN and fit custom dataset(RRLab data set.)
+  - Introduce various image noise such as Gaussian noise, salt-and-pepper noise, speckle noise, periodic noise, quantization noise, Poisson noise, Brownian noise, Gamma and Rayleigh noise.
+  - Introduce various denoising methods such as Gaussian blur, mean filter, median filter, Bilateral filter and Wavelet filter.
+  - Validate the effect of various noise types with varying levels of intensities on object detection.
+  - Cross validate the effect of various denoising methods for different noise types and combined noise types.
+  - Infer the intrinsic dimension of data representation with TwoNN to understand the model's interpretability of noise and denoising methods.
+  
+# Faster R-CNN
 A Tensorflow implementation of faster RCNN detection framework by Xinlei Chen (xinleic@cs.cmu.edu). This repository is based on the python Caffe implementation of faster RCNN available [here](https://github.com/rbgirshick/py-faster-rcnn).
 
-**Note**: Several minor modifications are made when reimplementing the framework, which give potential improvements. For details about the modifications and ablative analysis, please refer to the technical report [An Implementation of Faster RCNN with Study for Region Sampling](https://arxiv.org/pdf/1702.02138.pdf). If you are seeking to reproduce the results in the original paper, please use the [official code](https://github.com/ShaoqingRen/faster_rcnn) or maybe the [semi-official code](https://github.com/rbgirshick/py-faster-rcnn). For details about the faster RCNN architecture please refer to the paper [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks](http://arxiv.org/pdf/1506.01497.pdf).
+**Note**: Several minor modifications are made when reimplementing the framework, which give potential improvements. For details about the modifications and ablative analysis, please refer to the technical report [An Implementation of Faster RCNN with Study for Region Sampling](https://arxiv.org/pdf/1702.02138.pdf). For details about the faster RCNN architecture please refer to the paper [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks](http://arxiv.org/pdf/1506.01497.pdf).
 
 ### Detection Performance
-The current code supports **VGG16**, **Resnet V1** and **Mobilenet V1** models. We mainly tested it on plain VGG16 and Resnet101 (thank you @philokey!) architecture. As the baseline, we report numbers using a single model on a single convolution layer, so no multi-scale, no multi-stage bounding box regression, no skip-connection, no extra input is used. The only data augmentation technique is left-right flipping during training following the original Faster RCNN. All models are released.
+The current code supports **VGG16**, **Resnet V1**. We mainly tested it on plain VGG16 and Resnet101 architecture. As the baseline, we report numbers using a single model on a single convolution layer, so no multi-scale, no multi-stage bounding box regression, no skip-connection, no extra input is used.
 
 With VGG16 (``conv5_3``):
-  - Train on VOC 2007 trainval and test on VOC 2007 test, **70.8**.
+  - Train on RRLab trainval and test on RRLab test, **70.8**.
   - Train on VOC 2007+2012 trainval and test on VOC 2007 test ([R-FCN](https://github.com/daijifeng001/R-FCN) schedule), **75.7**.
   - Train on COCO 2014 [trainval35k](https://github.com/rbgirshick/py-faster-rcnn/tree/master/models) and test on [minival](https://github.com/rbgirshick/py-faster-rcnn/tree/master/models) (*Iterations*: 900k/1190k), **30.2**.
 
