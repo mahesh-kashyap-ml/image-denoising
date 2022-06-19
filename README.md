@@ -113,11 +113,15 @@ cd $FRCN_ROOT
       | brownian | 0.9 | 0.09 | 0.009 |
       | periodic | 3.14 | 100 | size |
       | gamma | 0.05 | 0.1 | 0.2 |
-      | rayleigh | 0.1 | 0.2 | 0.3 |
-  
+      | rayleigh | 0.1 | 0.2 | 0.3 |   
       
+      - for example, gaussian_var0.1, gaussian_var1.0, gaussian_mean_var0.1, gaussian_wavelet_var1.5, 
+    - The code supports to train and test with mixture of noise intensities. The intensity will be randomly chosen at runtime. 
+      - use just the noise type: ./experiments/scripts/test_faster_rcnn.sh <arg1>
+    - The code also supports training and testing with mixture of noise models at specific level of intensity and also with varying levels of intensities.
+      - train and test with noise only; for arg3: noise_mix_var_all_low, noise_mix_var_all_medium, noise_mix_var_all_high and noise_mix_var_all
+      - train and test with denoise method; for  arg3: noise_mix_var_all_{denoise method}
       
-    - for example, gaussian_var0.1, gaussian_var1.0, gaussian_mean_var0.1, gaussian_wavelet_var1.5, 
   
       
 4. Test with pre-trained Resnet101 models
