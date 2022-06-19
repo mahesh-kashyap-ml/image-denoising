@@ -2,6 +2,7 @@
 The objective of this project is to,
   - Implement Object detection with Faster R-CNN and fit custom dataset(RRLab data set.)
   - Introduce various image noise such as Gaussian noise, salt-and-pepper noise, speckle noise, periodic noise, quantization noise, Poisson noise, Brownian noise, Gamma and Rayleigh noise.
+  - Intoroduce other miscellaneous noise such as bloom, enhanced brighness and color quantization noise.
   - Introduce various denoising methods such as Gaussian blur, mean filter, median filter, Bilateral filter and Wavelet filter.
   - Validate the effect of various noise types with varying levels of intensities on object detection.
   - Cross validate the effect of various denoising methods for different noise types and combined noise types.
