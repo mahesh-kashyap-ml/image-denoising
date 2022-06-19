@@ -15,8 +15,11 @@ A Tensorflow implementation of faster RCNN detection framework by Xinlei Chen (x
 ### Detection Performance
 The current code supports **VGG16**, **Resnet V1**. We mainly tested it on plain VGG16 and Resnet101 architecture. As the baseline, we report numbers using a single model on a single convolution layer, so no multi-scale, no multi-stage bounding box regression, no skip-connection, no extra input is used.
 
+
+
 With VGG16 (``conv5_3``):
   - Train on RRLab trainval and test on RRLab test, **70.8**.
+  - Train on RRLab trainval with Gaussian noise and test on RRLab test with gaussian noise, 
   - Train on VOC 2007+2012 trainval and test on VOC 2007 test ([R-FCN](https://github.com/daijifeng001/R-FCN) schedule), **75.7**.
   - Train on COCO 2014 [trainval35k](https://github.com/rbgirshick/py-faster-rcnn/tree/master/models) and test on [minival](https://github.com/rbgirshick/py-faster-rcnn/tree/master/models) (*Iterations*: 900k/1190k), **30.2**.
 
@@ -25,28 +28,16 @@ With Resnet101 (last ``conv4``):
   - Train on VOC 2007+2012 trainval and test on VOC 2007 test (R-FCN schedule), **79.8**.
   - Train on COCO 2014 trainval35k and test on minival (900k/1190k), **35.4**.
 
-More Results:
-  - Train Mobilenet (1.0, 224) on COCO 2014 trainval35k and test on minival (900k/1190k), **21.8**.
-  - Train Resnet50 on COCO 2014 trainval35k and test on minival (900k/1190k), **32.4**.
-  - Train Resnet152 on COCO 2014 trainval35k and test on minival (900k/1190k), **36.1**.
 
-Approximate *baseline* [setup](https://github.com/endernewton/tf-faster-rcnn/blob/master/experiments/cfgs/res101-lg.yml) from [FPN](https://arxiv.org/abs/1612.03144) (this repository does not contain training code for FPN yet):
-  - Train Resnet50 on COCO 2014 trainval35k and test on minival (900k/1190k), **34.2**.
-  - Train Resnet101 on COCO 2014 trainval35k and test on minival (900k/1190k), **37.4**.
-  - Train Resnet152 on COCO 2014 trainval35k and test on minival (900k/1190k), **38.2**.
-
-**Note**:
-  - Due to the randomness in GPU training with Tensorflow especially for VOC, the best numbers are reported (with 2-3 attempts) here. According to my experience, for COCO you can almost always get a very close number (within ~0.2%) despite the randomness.
-  - The numbers are obtained with the **default** testing scheme which selects region proposals using non-maximal suppression (TEST.MODE nms), the alternative testing scheme (TEST.MODE top) will likely result in slightly better performance (see [report](https://arxiv.org/pdf/1702.02138.pdf), for COCO it boosts 0.X AP).
-  - Since we keep the small proposals (\< 16 pixels width/height), our performance is especially good for small objects.
-  - We do not set a threshold (instead of 0.05) for a detection to be included in the final result, which increases recall.
+**Note**:  
+  - The images are injected with various types of noise at varying levels of intensities are are evaluated for object detection individually and also as a mixture of noise types. 
+  - The noise are generated based on the respecitve probability density function with mean and variance. 
+  - The Faster R-CNN implementation keeps the small proposals (\< 16 pixels width/height), which results in  good performance for small objects.
+  - The threshold (instead of 0.05) is not set for a detection to be included in the final result, which increases recall.
   - Weight decay is set to 1e-4.
-  - For other minor modifications, please check the [report](https://arxiv.org/pdf/1702.02138.pdf). Notable ones include using ``crop_and_resize``, and excluding ground truth boxes in RoIs during training.
-  - For COCO, we find the performance improving with more iterations, and potentially better performance can be achieved with even more iterations.
-  - For Resnets, we fix the first block (total 4) when fine-tuning the network, and only use ``crop_and_resize`` to resize the RoIs (7x7) without max-pool (which I find useless especially for COCO). The final feature maps are average-pooled for classification and regression. All batch normalization parameters are fixed. Learning rate for biases is not doubled.
-  - For Mobilenets, we fix the first five layers when fine-tuning the network. All batch normalization parameters are fixed. Weight decay for Mobilenet layers is set to 4e-5.
-  - For approximate [FPN](https://arxiv.org/abs/1612.03144) baseline setup we simply resize the image with 800 pixels, add 32^2 anchors, and take 1000 proposals during testing.
-  - Check out [here](http://ladoga.graphics.cs.cmu.edu/xinleic/tf-faster-rcnn/)/[here](http://xinlei.sp.cs.cmu.edu/xinleic/tf-faster-rcnn/)/[here](https://drive.google.com/open?id=0B1_fAEgxdnvJSmF3YUlZcHFqWTQ) for the latest models, including longer COCO VGG16 models and Resnet ones.
+  - For other minor modifications, please check the [report](https://arxiv.org/pdf/1702.02138.pdf). Notable ones include using ``crop_and_resize``, and excluding ground truth boxes in RoIs during training.  
+  - For Resnets, the first block (total 4) are fixed when fine-tuning the network, and only use ``crop_and_resize`` to resize the RoIs (7x7) without max-pool. The final feature maps are average-pooled for classification and regression. All batch normalization parameters are fixed. Learning rate for biases is not doubled.
+  
   
 ![](data/imgs/gt.png)      |  ![](data/imgs/pred.png)
 :-------------------------:|:-------------------------:
@@ -66,12 +57,12 @@ Additional features not mentioned in the [report](https://arxiv.org/pdf/1702.021
 ### Installation
 1. Clone the repository
   ```Shell
-  git clone https://github.com/endernewton/tf-faster-rcnn.git
+  git clone https://github.com/mahesh-kashyap-ml/image-denoising.git
   ```
 
 2. Update your -arch in setup script to match your GPU
   ```Shell
-  cd tf-faster-rcnn/lib
+  cd image-denoising/lib
   # Change the GPU architecture (-arch) if necessary
   vim setup.py
   ```
@@ -84,7 +75,7 @@ Additional features not mentioned in the [report](https://arxiv.org/pdf/1702.021
   | Grid K520 (AWS g2.2xlarge) | sm_30 |
   | Tesla K80 (AWS p2.xlarge) | sm_37 |
 
-  **Note**: You are welcome to contribute the settings on your end if you have made the code work properly on other GPUs. Also even if you are only using CPU tensorflow, GPU based code (for NMS) will be used by default, so please set **USE_GPU_NMS False** to get the correct output.
+ GPU based code (for NMS) will be used by default. So, to use CPU tensorflow, please set **USE_GPU_NMS False** to get the correct output.
 
 
 3. Build the Cython modules
@@ -94,37 +85,29 @@ Additional features not mentioned in the [report](https://arxiv.org/pdf/1702.021
   cd ..
   ```
 
-4. Install the [Python COCO API](https://github.com/pdollar/coco). The code requires the API to access COCO dataset.
-  ```Shell
-  cd data
-  git clone https://github.com/pdollar/coco.git
-  cd coco/PythonAPI
-  make
-  cd ../../..
-  ```
-
 ### Setup data
-Please follow the instructions of py-faster-rcnn [here](https://github.com/rbgirshick/py-faster-rcnn#beyond-the-demo-installation-for-training-and-testing-models) to setup VOC and COCO datasets (Part of COCO is done). The steps involve downloading data and optionally creating soft links in the ``data`` folder. Since faster RCNN does not rely on pre-computed proposals, it is safe to ignore the steps that setup proposals.
+Locate the RRLab dataset folder and create a soft link under ./data with the name **6thfloorData**
 
-If you find it useful, the ``data/cache`` folder created on my side is also shared [here](http://ladoga.graphics.cs.cmu.edu/xinleic/tf-faster-rcnn/cache.tgz).
+Pre-trained ImageNet models can be downloaded by  
+```Shell
+cd $FRCN_ROOT
+./data/scripts/fetch_imagenet_models.sh
+```
 
 ### Demo and Test with pre-trained models
-1. Download pre-trained model
+1. Download pre-trained model or The pre-trained models are available in this directory.
   ```Shell
   # Resnet101 for voc pre-trained on 07+12 set
   ./data/scripts/fetch_faster_rcnn_models.sh
-  ```
-  **Note**: if you cannot download the models through the link, or you want to try more models, you can check out the following solutions and optionally update the downloading script:
-  - Another server [here](http://xinlei.sp.cs.cmu.edu/xinleic/tf-faster-rcnn/).
-  - Google drive [here](https://drive.google.com/open?id=0B1_fAEgxdnvJSmF3YUlZcHFqWTQ).
+  ```  
 
 2. Create a folder and a soft link to use the pre-trained model
   ```Shell
   NET=res101
-  TRAIN_IMDB=voc_2007_trainval+voc_2012_trainval
+  TRAIN_IMDB=rrData
   mkdir -p output/${NET}/${TRAIN_IMDB}
   cd output/${NET}/${TRAIN_IMDB}
-  ln -s ../../../data/voc_2007_trainval+voc_2012_trainval ./default
+  ln -s ../../../data/6thfloorData ./default
   cd ../../..
   ```
 
@@ -134,8 +117,7 @@ If you find it useful, the ``data/cache`` folder created on my side is also shar
   GPU_ID=0
   CUDA_VISIBLE_DEVICES=${GPU_ID} ./tools/demo.py
   ```
-  **Note**: Resnet101 testing probably requires several gigabytes of memory, so if you encounter memory capacity issues, please install it with CPU support only. Refer to [Issue 25](https://github.com/endernewton/tf-faster-rcnn/issues/25).
-
+  
 4. Test with pre-trained Resnet101 models
   ```Shell
   GPU_ID=0
@@ -215,32 +197,3 @@ tensorboard/[NET]/[DATASET]/default_val/
 ```
 
 The default number of training iterations is kept the same to the original faster RCNN for VOC 2007, however I find it is beneficial to train longer (see [report](https://arxiv.org/pdf/1702.02138.pdf) for COCO), probably due to the fact that the image batch size is one. For VOC 07+12 we switch to a 80k/110k schedule following [R-FCN](https://github.com/daijifeng001/R-FCN). Also note that due to the nondeterministic nature of the current implementation, the performance can vary a bit, but in general it should be within ~1% of the reported numbers for VOC, and ~0.2% of the reported numbers for COCO. Suggestions/Contributions are welcome.
-
-### Citation
-If you find this implementation or the analysis conducted in our report helpful, please consider citing:
-
-    @article{chen17implementation,
-        Author = {Xinlei Chen and Abhinav Gupta},
-        Title = {An Implementation of Faster RCNN with Study for Region Sampling},
-        Journal = {arXiv preprint arXiv:1702.02138},
-        Year = {2017}
-    }
-    
-Or for a formal paper, [Spatial Memory Network](https://arxiv.org/abs/1704.04224):
-
-    @article{chen2017spatial,
-      title={Spatial Memory for Context Reasoning in Object Detection},
-      author={Chen, Xinlei and Gupta, Abhinav},
-      journal={arXiv preprint arXiv:1704.04224},
-      year={2017}
-    }
-
-For convenience, here is the faster RCNN citation:
-
-    @inproceedings{renNIPS15fasterrcnn,
-        Author = {Shaoqing Ren and Kaiming He and Ross Girshick and Jian Sun},
-        Title = {Faster {R-CNN}: Towards Real-Time Object Detection
-                 with Region Proposal Networks},
-        Booktitle = {Advances in Neural Information Processing Systems ({NIPS})},
-        Year = {2015}
-    }
