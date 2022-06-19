@@ -4,9 +4,9 @@ The objective of this project is to,
   - Introduce various image noise such as Gaussian noise, salt-and-pepper noise, speckle noise, periodic noise, quantization noise, Poisson noise, Brownian noise, Gamma and Rayleigh noise.
   - Intoroduce other miscellaneous noise such as bloom, enhanced brighness and color quantization noise.
   - Introduce various denoising methods such as Gaussian blur, mean filter, median filter, Bilateral filter and Wavelet filter.
-  - Validate the effect of various noise types with varying levels of intensities on object detection.
-  - Cross validate the effect of various denoising methods for different noise types and combined noise types.
-  - Infer the intrinsic dimension of data representation with TwoNN to understand the model's interpretability of noise and denoising methods.
+  - Evaluate the effect of various noise types with varying levels of intensities on object detection.
+  - Evaluate the effect of various denoising methods for different noise types and combined noise types on object detection.
+  - with TwoNN algorithm, infer the intrinsic dimension of data representation with noise models and denoising methods for object detection with Faster R-CNN.
   
 # Faster R-CNN
 A Tensorflow implementation of faster RCNN detection framework by [here](https://github.com/endernewton/tf-faster-rcnn). This repository is based on the python Caffe implementation of faster RCNN available [here](https://github.com/rbgirshick/py-faster-rcnn).
@@ -19,7 +19,7 @@ The current code supports **VGG16**, **Resnet V1**. We mainly tested it on plain
 
 
 With Resnet101 (last ``conv4``):
-  - Train on VOC 2007 trainval and test on VOC 2007 test, **75.7**.
+  - Train on RRLab dataset trainval and test on RRLab dataset test, **75.7**.
   - Train on VOC 2007+2012 trainval and test on VOC 2007 test (R-FCN schedule), **79.8**.
   - Train on COCO 2014 trainval35k and test on minival (900k/1190k), **35.4**.
 
@@ -34,10 +34,6 @@ With Resnet101 (last ``conv4``):
   - For Resnets, the first block (total 4) are fixed when fine-tuning the network, and only use ``crop_and_resize`` to resize the RoIs (7x7) without max-pool. The final feature maps are average-pooled for classification and regression. All batch normalization parameters are fixed. Learning rate for biases is not doubled.
   
   
-![](data/imgs/gt.png)      |  ![](data/imgs/pred.png)
-:-------------------------:|:-------------------------:
-Displayed Ground Truth on Tensorboard |  Displayed Predictions on Tensorboard
-
 ### Prerequisites
   - A basic Tensorflow installation. The code follows **r1.2** format. If you are using r1.0, please check out the r1.0 branch to fix the slim Resnet block issue. If you are using an older version (r0.1-r0.12), please check out the r0.12 branch. While it is not required, for experimenting the original RoI pooling (which requires modification of the C++ code in tensorflow), you can check out this tensorflow [fork](https://github.com/endernewton/tensorflow) and look for ``tf.image.roi_pooling``.
   - Python packages you might not have: `cython`, `opencv-python`, `easydict` (similar to [py-faster-rcnn](https://github.com/rbgirshick/py-faster-rcnn)). For `easydict` make sure you have the right version. This codebase use 1.6.  
