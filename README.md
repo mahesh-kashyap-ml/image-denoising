@@ -127,7 +127,7 @@ cd $FRCN_ROOT
 4. Test with pre-trained Resnet101 models
   ```Shell
   GPU_ID=0
-  ./experiments/scripts/test_faster_rcnn.sh $GPU_ID rrData res101 noise
+  ./experiments/scripts/test_faster_rcnn.sh $GPU_ID rrData res101 gaussian
   ```
   
 ### Train your own model
@@ -152,53 +152,40 @@ cd $FRCN_ROOT
 
 2. Train (and test, evaluation)
   ```Shell
-  ./experiments/scripts/train_faster_rcnn.sh [GPU_ID] [DATASET] [NET]
+  ./experiments/scripts/train_faster_rcnn.sh [GPU_ID] [DATASET] [NET] [NOISE_TYPE]
   # GPU_ID is the GPU you want to test on
   # NET in {vgg16, res50, res101, res152} is the network arch to use
-  # DATASET {pascal_voc, pascal_voc_0712, coco} is defined in train_faster_rcnn.sh
+  # DATASET {rrData is defined in train_faster_rcnn.sh
+  # NOISE_TYPE {gaussian, sap, speckle, poisson, quant, uniform, periodic, brownian, gamm, rayleigh.}
   # Examples:
   ./experiments/scripts/train_faster_rcnn.sh 0 pascal_voc vgg16
   ./experiments/scripts/train_faster_rcnn.sh 1 coco res101
-  ```
-  **Note**: Please double check you have deleted soft link to the pre-trained models before training. If you find NaNs during training, please refer to [Issue 86](https://github.com/endernewton/tf-faster-rcnn/issues/86). Also if you want to have multi-gpu support, check out [Issue 121](https://github.com/endernewton/tf-faster-rcnn/issues/121).
-
+ 
 3. Visualization with Tensorboard
   ```Shell
-  tensorboard --logdir=tensorboard/vgg16/voc_2007_trainval/ --port=7001 &
-  tensorboard --logdir=tensorboard/vgg16/coco_2014_train+coco_2014_valminusminival/ --port=7002 &
+  tensorboard --logdir=tensorboard/res101/rrData/ --port=7001 &  
   ```
 
 4. Test and evaluate
   ```Shell
-  ./experiments/scripts/test_faster_rcnn.sh [GPU_ID] [DATASET] [NET]
+  ./experiments/scripts/test_faster_rcnn.sh [GPU_ID] [DATASET] [NET] [NOISE_TYPE]
   # GPU_ID is the GPU you want to test on
   # NET in {vgg16, res50, res101, res152} is the network arch to use
-  # DATASET {pascal_voc, pascal_voc_0712, coco} is defined in test_faster_rcnn.sh
+  # DATASET {rrData} is defined in test_faster_rcnn.sh
+  # NOISE_TYPE {gaussian, sap, speckle, poisson, quant, uniform, periodic, brownian, gamm, rayleigh.}
   # Examples:
   ./experiments/scripts/test_faster_rcnn.sh 0 pascal_voc vgg16
   ./experiments/scripts/test_faster_rcnn.sh 1 coco res101
   ```
-
-5. You can use ``tools/reval.sh`` for re-evaluation
-
-
 By default, trained networks are saved under:
 
 ```
-output/[NET]/[DATASET]/default/
-```
-
-Test outputs are saved under:
-
-```
-output/[NET]/[DATASET]/default/[SNAPSHOT]/
+output/[NET]/[DATASET]/[NOISE_TYPE]/
 ```
 
 Tensorboard information for train and validation is saved under:
 
 ```
-tensorboard/[NET]/[DATASET]/default/
-tensorboard/[NET]/[DATASET]/default_val/
+tensorboard/[NET]/[rrData_2021_train]/[NOISE_TYPE]/
+tensorboard/[NET]/[rrData_2021_train]/[rrData_2021_train]_val/
 ```
-
-The default number of training iterations is kept the same to the original faster RCNN for VOC 2007, however I find it is beneficial to train longer (see [report](https://arxiv.org/pdf/1702.02138.pdf) for COCO), probably due to the fact that the image batch size is one. For VOC 07+12 we switch to a 80k/110k schedule following [R-FCN](https://github.com/daijifeng001/R-FCN). Also note that due to the nondeterministic nature of the current implementation, the performance can vary a bit, but in general it should be within ~1% of the reported numbers for VOC, and ~0.2% of the reported numbers for COCO. Suggestions/Contributions are welcome.
