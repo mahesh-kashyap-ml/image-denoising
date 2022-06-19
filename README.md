@@ -81,7 +81,7 @@ cd $FRCN_ROOT
 ./data/scripts/fetch_imagenet_models.sh
 ```
 
-### Demo and Test with pre-trained models
+### Test with pre-trained models
 1. Download pre-trained model or The pre-trained models are available in this directory. `/home/mahesh/thesis/de-noise/tf-faster-rcnn/output/res101/rrData_2021_train`
   
 
@@ -158,8 +158,8 @@ cd $FRCN_ROOT
   # DATASET {rrData is defined in train_faster_rcnn.sh
   # NOISE_TYPE {gaussian, sap, speckle, poisson, quant, uniform, periodic, brownian, gamm, rayleigh.}
   # Examples:
-  ./experiments/scripts/train_faster_rcnn.sh 0 pascal_voc vgg16
-  ./experiments/scripts/train_faster_rcnn.sh 1 coco res101
+  ./experiments/scripts/train_faster_rcnn.sh 0 rrData res101 gaussian_var0.1
+  ./experiments/scripts/train_faster_rcnn.sh 1 rrData res101 speckle_mean_var0.5
  
 3. Visualization with Tensorboard
   ```Shell
@@ -174,8 +174,8 @@ cd $FRCN_ROOT
   # DATASET {rrData} is defined in test_faster_rcnn.sh
   # NOISE_TYPE {gaussian, sap, speckle, poisson, quant, uniform, periodic, brownian, gamm, rayleigh.}
   # Examples:
-  ./experiments/scripts/test_faster_rcnn.sh 0 pascal_voc vgg16
-  ./experiments/scripts/test_faster_rcnn.sh 1 coco res101
+  ./experiments/scripts/test_faster_rcnn.sh 0 rrData res101 gaussian_var1.0
+  ./experiments/scripts/test_faster_rcnn.sh 1 rrData res101 speckle_median_var1.0
   ```
 By default, trained networks are saved under:
 
@@ -187,5 +187,13 @@ Tensorboard information for train and validation is saved under:
 
 ```
 tensorboard/[NET]/[rrData_2021_train]/[NOISE_TYPE]/
-tensorboard/[NET]/[rrData_2021_train]/[rrData_2021_train]_val/
+tensorboard/[NET]/[rrData_2021_train]/[rrData_2021_train]_val/   
 ```
+  
+ ### Intrinsic dimension of data representation. 
+  - To evaluate the variation of intrinsic dimension across the hidden layers of Faster R-CNN backbone(mainly ResNet and VGG16),
+    - 10 hidden convolution layers are chosen. in `lib/model/test.py`
+  - To evaluate the variation in ResNet101, ResNet50 and VGG16,
+      - uncomment the respective block.
+  - The intrinsic dimension values (ID) are logged to wandb directory initialized in `lib/model/test.py` at line 184.  
+  
