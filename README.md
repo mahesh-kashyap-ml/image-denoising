@@ -9,20 +9,7 @@ The objective of this project is to,
   - with TwoNN algorithm, infer the intrinsic dimension of data representation with noise models and denoising methods for object detection with Faster R-CNN.
   
 # Faster R-CNN
-A Tensorflow implementation of faster RCNN detection framework by [here](https://github.com/endernewton/tf-faster-rcnn). This repository is based on the python Caffe implementation of faster RCNN available [here](https://github.com/rbgirshick/py-faster-rcnn).
-
-**Note**: Several minor modifications are made when reimplementing the framework, which give potential improvements. For details about the modifications and ablative analysis, please refer to the technical report [An Implementation of Faster RCNN with Study for Region Sampling](https://arxiv.org/pdf/1702.02138.pdf). For details about the faster RCNN architecture please refer to the paper [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks](http://arxiv.org/pdf/1506.01497.pdf).
-
-### Detection Performance
-The current code supports **VGG16**, **Resnet V1**. We mainly tested it on plain Resnet101 architecture. As the baseline, we report numbers using a single model on a single convolution layer, so no multi-scale, no multi-stage bounding box regression, no skip-connection, no extra input is used.
-
-
-
-With Resnet101 (last ``conv4``):
-  - Train on RRLab dataset trainval and test on RRLab dataset test, **75.7**.
-  - Train on VOC 2007+2012 trainval and test on VOC 2007 test (R-FCN schedule), **79.8**.
-  - Train on COCO 2014 trainval35k and test on minival (900k/1190k), **35.4**.
-
+A Tensorflow implementation of faster RCNN detection framework by [here](https://github.com/endernewton/tf-faster-rcnn). 
 
 **Note**:  
   - The images are injected with various types of noise at varying levels of intensities are are evaluated for object detection individually and also as a mixture of noise types. 
